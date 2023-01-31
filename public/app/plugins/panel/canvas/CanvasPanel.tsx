@@ -4,7 +4,7 @@ import { ReplaySubject, Subscription } from 'rxjs';
 import { PanelProps } from '@grafana/data';
 import { locationService } from '@grafana/runtime/src';
 import { PanelContext, PanelContextRoot } from '@grafana/ui';
-import { CanvasFrameOptions } from 'app/features/canvas';
+import { CanvasConnection, CanvasFrameOptions } from 'app/features/canvas';
 import { ElementState } from 'app/features/canvas/runtime/element';
 import { Scene } from 'app/features/canvas/runtime/scene';
 import { PanelEditEnteredEvent, PanelEditExitedEvent } from 'app/types/events';
@@ -27,6 +27,7 @@ interface State {
 export interface InstanceState {
   scene: Scene;
   selected: ElementState[];
+  selectedConnection?: CanvasConnection | undefined;
 }
 
 export interface SelectionAction {
@@ -126,6 +127,18 @@ export class CanvasPanel extends Component<Props, State> {
               if (canvasInstance !== activeCanvasPanel) {
                 canvasInstance.scene.clearCurrentSelection(true);
               }
+            });
+          },
+        })
+      );
+
+      this.subs.add(
+        this.scene.connectionSelection.subscribe({
+          next: (v) => {
+            this.panelContext.onInstanceStateChange!({
+              scene: this.scene,
+              layer: this.scene.root,
+              connectionSelection: v,
             });
           },
         })
