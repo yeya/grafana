@@ -1,6 +1,8 @@
 import { FieldConfigProperty, PanelOptionsEditorBuilder, PanelPlugin } from '@grafana/data';
 import { FrameState } from 'app/features/canvas/runtime/frame';
 
+import { ElementState } from '../../../features/canvas/runtime/element';
+
 import { CanvasPanel, InstanceState } from './CanvasPanel';
 import { getElementEditor } from './editor/elementEditor';
 import { getLayerEditor } from './editor/layerEditor';
@@ -46,14 +48,16 @@ export const plugin = new PanelPlugin<PanelOptions>(CanvasPanel)
       const selection = state.selected;
       if (selection?.length === 1) {
         const element = selection[0];
-        if (!(element instanceof FrameState)) {
-          builder.addNestedOptions(
-            getElementEditor({
-              category: [`Selected element (${element.options.name})`],
-              element,
-              scene: state.scene,
-            })
-          );
+        if (element instanceof ElementState) {
+          if (!(element instanceof FrameState)) {
+            builder.addNestedOptions(
+              getElementEditor({
+                category: [`Selected element (${element.options.name})`],
+                element,
+                scene: state.scene,
+              })
+            );
+          }
         }
       }
     }

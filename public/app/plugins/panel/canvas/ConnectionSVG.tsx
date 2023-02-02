@@ -7,6 +7,7 @@ import { CanvasConnection } from 'app/features/canvas/element';
 import { ElementState } from 'app/features/canvas/runtime/element';
 import { Scene } from 'app/features/canvas/runtime/scene';
 
+import { ConnectionInfo } from './types';
 import { getConnections } from './utils';
 
 type Props = {
@@ -94,6 +95,12 @@ export const ConnectionSVG = ({ setSVGRef, setLineRef, scene }: Props) => {
     return getConnections(scene.byName);
   }, [scene.byName]);
 
+  const initConnection = (target: any, connectionInfo: ConnectionInfo) => {
+    if (!connectionInfo.info.div) {
+      connectionInfo.info.div = target;
+    }
+  };
+
   // Figure out target and then target's relative coordinates drawing (if no target do parent)
   const renderConnections = () => {
     return findConnections().map((v, idx) => {
@@ -155,6 +162,7 @@ export const ConnectionSVG = ({ setSVGRef, setLineRef, scene }: Props) => {
             </defs>
             <line
               id={`${CONNECTION_LINE_ID}_transparent`}
+              ref={(e) => initConnection(e, v)}
               cursor={connectionCursorStyle}
               stroke="transparent"
               pointerEvents="auto"

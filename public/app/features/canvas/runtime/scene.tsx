@@ -359,8 +359,20 @@ export class Scene {
     return targetElements;
   };
 
+  private generateTargetConnections = () => {
+    const connectionDivs: any[] = [];
+    this.root.elements.forEach((element) => {
+      if (element.options.connections) {
+        element.options.connections.forEach((connection) => connectionDivs.push(connection.div));
+      }
+    });
+
+    return connectionDivs;
+  };
+
   initMoveable = (destroySelecto = false, allowChanges = true) => {
     const targetElements = this.generateTargetElements(this.root.elements);
+    const targetConnections = this.generateTargetConnections();
 
     if (destroySelecto && this.selecto) {
       this.selecto.destroy();
@@ -369,7 +381,7 @@ export class Scene {
     this.selecto = new Selecto({
       container: this.div,
       rootContainer: this.div,
-      selectableTargets: targetElements,
+      selectableTargets: [...targetElements, ...targetConnections],
       toggleContinueSelect: 'shift',
       selectFromInside: false,
       hitRate: 0,
@@ -544,7 +556,7 @@ export class Scene {
         event.stop();
       }
     })
-      .on('select', () => {
+      .on('select', (event) => {
         this.editModeEnabled.next(false);
 
         // Hide connection anchors on select
@@ -565,6 +577,16 @@ export class Scene {
             this.moveable!.dragStart(event.inputEvent);
           });
         }
+
+        targets.forEach((target) => {
+          if (target instanceof SVGLineElement && this.moveable) {
+            console.log(target);
+            // @TODO set selected style for a line sibling?
+            // this.moveable.target = this.styles.selectedLine;
+            // this.moveable.target = null;
+            console.log('we have a line');
+          }
+        });
       })
       .on('dragEnd', (event) => {
         clearTimeout(event.data.timer);
@@ -671,5 +693,9 @@ const getStyles = stylesFactory((theme: GrafanaTheme2) => ({
   `,
   selected: css`
     z-index: 999 !important;
+  `,
+  selectedLine: css`
+    //color: red !important;
+    display: none !important;
   `,
 }));

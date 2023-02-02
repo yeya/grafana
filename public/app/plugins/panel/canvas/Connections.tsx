@@ -189,6 +189,7 @@ export class Connections {
       }
 
       this.isDrawingConnection = false;
+      this.scene.save(true);
     }
   };
 

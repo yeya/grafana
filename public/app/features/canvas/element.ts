@@ -42,6 +42,7 @@ export enum ConnectionPath {
 }
 
 export interface CanvasConnection {
+  div?: any;
   source: ConnectionCoordinates;
   target: ConnectionCoordinates;
   targetName?: string;
