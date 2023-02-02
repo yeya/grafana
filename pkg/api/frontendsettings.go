@@ -4,7 +4,6 @@ import (
 	"context"
 	"fmt"
 	"net/http"
-	"strconv"
 
 	"github.com/grafana/grafana/pkg/api/dtos"
 	"github.com/grafana/grafana/pkg/plugins"
@@ -148,17 +147,18 @@ func (hs *HTTPServer) getFrontendSettings(c *contextmodel.ReqContext) (*dtos.Fro
 		DateFormats:                         hs.Cfg.DateFormats,
 
 		Auth: dtos.FrontendSettingsAuthDTO{
-			OAuthSkipOrgRoleUpdateSync: hs.Cfg.OAuthSkipOrgRoleUpdateSync,
-			SAMLSkipOrgRoleSync:        hs.Cfg.SectionWithEnvOverrides("auth.saml").Key("skip_org_role_sync").MustBool(false),
-			LDAPSkipOrgRoleSync:        hs.Cfg.LDAPSkipOrgRoleSync,
-			GoogleSkipOrgRoleSync:      hs.Cfg.GoogleSkipOrgRoleSync,
-			JWTAuthSkipOrgRoleSync:     hs.Cfg.JWTAuthSkipOrgRoleSync,
-			GrafanaComSkipOrgRoleSync:  hs.Cfg.GrafanaComSkipOrgRoleSync,
-			AzureADSkipOrgRoleSync:     hs.Cfg.AzureADSkipOrgRoleSync,
-			GithubSkipOrgRoleSync:      hs.Cfg.GithubSkipOrgRoleSync,
-			GitLabSkipOrgRoleSync:      hs.Cfg.GitLabSkipOrgRoleSync,
-			OktaSkipOrgRoleSync:        hs.Cfg.OktaSkipOrgRoleSync,
-			DisableSyncLock:            hs.Cfg.DisableSyncLock,
+			OAuthSkipOrgRoleUpdateSync:  hs.Cfg.OAuthSkipOrgRoleUpdateSync,
+			SAMLSkipOrgRoleSync:         hs.Cfg.SectionWithEnvOverrides("auth.saml").Key("skip_org_role_sync").MustBool(false),
+			LDAPSkipOrgRoleSync:         hs.Cfg.LDAPSkipOrgRoleSync,
+			GoogleSkipOrgRoleSync:       hs.Cfg.GoogleSkipOrgRoleSync,
+			JWTAuthSkipOrgRoleSync:      hs.Cfg.JWTAuthSkipOrgRoleSync,
+			GrafanaComSkipOrgRoleSync:   hs.Cfg.GrafanaComSkipOrgRoleSync,
+			GenericOAuthSkipOrgRoleSync: hs.Cfg.GenericOAuthSkipOrgRoleSync,
+			AzureADSkipOrgRoleSync:      hs.Cfg.AzureADSkipOrgRoleSync,
+			GithubSkipOrgRoleSync:       hs.Cfg.GithubSkipOrgRoleSync,
+			GitLabSkipOrgRoleSync:       hs.Cfg.GitLabSkipOrgRoleSync,
+			OktaSkipOrgRoleSync:         hs.Cfg.OktaSkipOrgRoleSync,
+			DisableSyncLock:             hs.Cfg.DisableSyncLock,
 		},
 
 		BuildInfo: dtos.FrontendSettingsBuildInfoDTO{
@@ -286,7 +286,7 @@ func (hs *HTTPServer) getFSDataSources(c *contextmodel.ReqContext, enabledPlugin
 		url := ds.Url
 
 		if ds.Access == datasources.DS_ACCESS_PROXY {
-			url = "/api/datasources/proxy/" + strconv.FormatInt(ds.Id, 10)
+			url = "/api/datasources/proxy/uid/" + ds.Uid
 		}
 
 		dsDTO := plugins.DataSourceDTO{
