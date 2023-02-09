@@ -372,5 +372,11 @@ var (
 			Description: "Support overriding cookie preferences per user",
 			State:       FeatureStateAlpha,
 		},
+		{
+			Name:         "timeSeriesTable",
+			Description:  "Enable time series table transformer & area chart cell type",
+			State:        FeatureStateAlpha,
+			FrontendOnly: true,
+		},
 	}
 )

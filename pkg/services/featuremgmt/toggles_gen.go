@@ -270,4 +270,8 @@ const (
 	// FlagIndividualCookiePreferences
 	// Support overriding cookie preferences per user
 	FlagIndividualCookiePreferences = "individualCookiePreferences"
+
+	// FlagTimeSeriesTable
+	// Enable time series table transformer &amp; area chart cell type
+	FlagTimeSeriesTable = "timeSeriesTable"
 )
