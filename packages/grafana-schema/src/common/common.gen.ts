@@ -649,7 +649,6 @@ export interface TableBarGaugeCellOptions {
  * Area chart cell options
  */
 export interface TableAreaChartCellOptions extends GraphFieldConfig {
-  color?: string;
   type: TableCellDisplayMode.AreaChart;
 }
 
